@@ -1,4 +1,3 @@
-
 const formulario = document.querySelector("#form-pesquisa");
 const mensagem = document.querySelector("#mensagem");
 
