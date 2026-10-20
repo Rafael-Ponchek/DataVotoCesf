@@ -1,6 +1,26 @@
 const formulario = document.querySelector("#form-pesquisa");
 const mensagem = document.querySelector("#mensagem");
 
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyDqXGQcAPyZ37Pnlb7fmbqzNfv3a6SjCXE",
+    authDomain: "data-voto-cesf2.firebaseapp.com",
+    databaseURL: "https://data-voto-cesf2-default-rtdb.firebaseio.com",
+    projectId: "data-voto-cesf2",
+    storageBucket: "data-voto-cesf2.firebasestorage.app",
+    messagingSenderId: "724147999457",
+    appId: "1:724147999457:web:3254dbc2eea62aeb969da0"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+
 formulario.addEventListener("submit", (evento) => {
     evento.preventDefault();
 
