@@ -1,0 +1,387 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataVotoCesf | Pesquisa 2026</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+</head>
+
+<body>
+
+    <header class="topo">
+        <div class="topo-texto">
+            <p class="etiqueta">COLÉGIO SAGRADA FAMÍLIA · CAMPO LARGO/PR</p>
+            <h1>DataVotoCesf</h1>
+            <p>Pesquisa eleitoral e socioeconômica</p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="introducao">
+            <h2>Sua opinião importa!</h2>
+            <p>
+                Responda às perguntas abaixo. As respostas serão
+                utilizadas para a análise da pesquisa.
+            </p>
+            <p class="aviso">
+                A pesquisa é voluntária. Por isso, não informe seu nome,
+                telefone ou outros dados que possam te identificar.
+            </p>
+        </section>
+
+        <form id="form-pesquisa">
+
+            <!-- PERFIL -->
+            <fieldset class="bloco">
+                <legend>Perfil demográfico, cultural e socioeconômico</legend>
+
+                <div class="campo">
+                    <label for="faixaEtaria">Faixa etária</label>
+                    <select id="faixaEtaria" name="faixaEtaria" required>
+                        <option value="">Selecione uma opção</option>
+                        <option>Menor que 16 anos</option>
+                        <option>16 a 20 anos</option>
+                        <option>21 a 39 anos</option>
+                        <option>40 a 69 anos</option>
+                        <option>70 anos ou mais</option>
+                    </select>
+                </div>
+
+                <fieldset class="subgrupo">
+                    <legend>Gênero</legend>
+
+                    <label class="opcao">
+                        <input type="radio" name="genero" value="Feminino" required>
+                        Feminino
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="genero" value="Masculino">
+                        Masculino
+                    </label>
+
+                    <label class="opcao">
+                        <input type="radio" name="genero" value="Prefiro não informar">
+                        Prefiro não informar
+                    </label>
+                </fieldset>
+
+                <div class="campo">
+                    <label for="racaCor">Raça/cor/etnia</label>
+                    <select id="racaCor" name="racaCor" required>
+                        <option value="">Selecione uma opção</option>
+                        <option>Branca</option>
+                        <option>Preta</option>
+                        <option>Parda</option>
+                        <option>Amarela</option>
+                        <option>Indígena</option>
+                        <option>Prefiro não informar</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="escolaridade">Grau de escolaridade</label>
+                    <select id="escolaridade" name="escolaridade" required>
+                        <option value="">Selecione uma opção</option>
+                        <option>Ensino fundamental incompleto (ou cursando)</option>
+                        <option>Ensino fundamental completo</option>
+                        <option>Ensino médio incompleto (ou cursando)</option>
+                        <option>Ensino médio completo</option>
+                        <option>Ensino superior incompleto (ou cursando)</option>
+                        <option>Ensino superior completo</option>
+                        <option>Pós-graduação / mestrado / doutorado</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="estado">Estado</label>
+                    <select id="estado" name="estado" required>
+                        <option value="">Selecione a sigla</option>
+                        <option value="AC">AC</option>
+                        <option value="AL">AL</option>
+                        <option value="AP">AP</option>
+                        <option value="AM">AM</option>
+                        <option value="BA">BA</option>
+                        <option value="CE">CE</option>
+                        <option value="DF">DF</option>
+                        <option value="ES">ES</option>
+                        <option value="GO">GO</option>
+                        <option value="MA">MA</option>
+                        <option value="MT">MT</option>
+                        <option value="MS">MS</option>
+                        <option value="MG">MG</option>
+                        <option value="PA">PA</option>
+                        <option value="PB">PB</option>
+                        <option value="PR">PR</option>
+                        <option value="PE">PE</option>
+                        <option value="PI">PI</option>
+                        <option value="RJ">RJ</option>
+                        <option value="RN">RN</option>
+                        <option value="RS">RS</option>
+                        <option value="RO">RO</option>
+                        <option value="RR">RR</option>
+                        <option value="SC">SC</option>
+                        <option value="SP">SP</option>
+                        <option value="SE">SE</option>
+                        <option value="TO">TO</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="bairro">Bairro</label>
+                    <input
+                        type="text"
+                        id="bairro"
+                        name="bairro"
+                        maxlength="100"
+                        placeholder="Digite seu bairro"
+                        required
+                    >
+                </div>
+
+                <div class="campo">
+                    <label for="moradia">Tipo de moradia</label>
+                    <select id="moradia" name="moradia" required>
+                        <option value="">Selecione uma opção</option>
+                        <option>Casa</option>
+                        <option>Apartamento</option>
+                        <option>Condomínio</option>
+                        <option>Outro</option>
+                        <option>Prefiro não informar</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="moradores">Número de moradores da residência</label>
+                    <select id="moradores" name="moradores" required>
+                        <option value="">Selecione uma opção</option>
+                        <option>1 morador</option>
+                        <option>2 moradores</option>
+                        <option>3 moradores</option>
+                        <option>4 moradores</option>
+                        <option>5 ou mais moradores</option>
+                        <option>Prefiro não informar</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="rendaFamiliar">Renda familiar mensal</label>
+                    <select id="rendaFamiliar" name="rendaFamiliar" required>
+                        <option value="">Selecione uma faixa</option>
+                        <option>Até 1 salário mínimo</option>
+                        <option>Mais de 1 até 2 salários mínimos</option>
+                        <option>Mais de 2 até 5 salários mínimos</option>
+                        <option>Mais de 5 até 10 salários mínimos</option>
+                        <option>Mais de 10 salários mínimos</option>
+                        <option>Prefiro não informar</option>
+                    </select>
+                </div>
+
+            </fieldset>
+
+            <!-- PRIORIDADES -->
+            <fieldset class="bloco">
+                <legend>Quais desses itens você almeja para os próximos 4 anos?</legend>
+
+                <p class="ajuda">Você pode marcar quantas opções quiser.</p>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Segurança pública">
+                    Segurança pública.
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Direitos iguais para homens e mulheres">
+                    Direitos dos homens e das mulheres igualitários.
+                    Ex.: mesmo salário pelo mesmo cargo.
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Cotas em universidades">
+                    Cotas em universidades. Ex.: negros, trans...
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Fim da escala 6x1">
+                    Redução da escala de trabalho — fim da escala 6x1.
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Saúde pública de qualidade (SUS)">
+                    Saúde pública de qualidade (SUS).
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Direitos humanos, equidade e inclusão social">
+                    Direitos humanos, equidade e inclusão social.
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Educação de qualidade">
+                    Educação de qualidade.
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Diminuição do feminicídio">
+                    Diminuição do feminicídio.
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="prioridades" value="Geração de emprego e oportunidades de trabalho">
+                    Geração de emprego e oportunidades de trabalho.
+                </label>
+            </fieldset>
+
+            <!-- MÍDIA | INFORMAÇÃO -->
+            <fieldset class="bloco">
+                <legend>Mídia e informação nas eleições 2026</legend>
+
+                <p class="pergunta">
+                    Qual seu principal meio de informação para essas eleições?
+                </p>
+
+                <p class="ajuda">Você pode marcar quantas opções quiser.</p>
+
+                <label class="opcao">
+                    <input type="checkbox" name="meiosInformacao" value="Televisão aberta">
+                    Televisão aberta
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="meiosInformacao" value="Rádio">
+                    Rádio
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="meiosInformacao" value="Redes sociais">
+                    Redes sociais (Facebook, Instagram, TikTok...)
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="meiosInformacao" value="Portais de notícias">
+                    Portais de notícias (G1, UOL...)
+                </label>
+
+                <label class="opcao">
+                    <input type="checkbox" name="meiosInformacao" value="Jornal impresso">
+                    Jornal impresso
+                </label>
+            </fieldset>
+
+            <!-- PRETENSÃO DO VOTO -->
+            <fieldset class="bloco">
+                <legend>Pretensão de voto</legend>
+
+                <p class="ajuda">Selecione apenas uma opção.</p>
+
+                <label class="voto-opcao">
+                    <input
+                        type="radio"
+                        name="pretensaoVoto"
+                        value="Luiz Inácio Lula da Silva (PT)"
+                        required
+                    >
+                    <span>Luiz Inácio Lula da Silva (PT)</span>
+                    <img
+                        src="IMAGENS/logo-pt.png.png"
+                        alt="Logotipo do PT"
+                        class="logo-partido"
+                    >
+                </label>
+
+                <label class="voto-opcao">
+                    <input
+                        type="radio"
+                        name="pretensaoVoto"
+                        value="Flávio Bolsonaro (PL)"
+                    >
+                    <span>Flávio Bolsonaro (PL)</span>
+                    <img
+                        src="IMAGENS/logo-pl.jpg.jpg"
+                        alt="Logotipo do PL"
+                        class="logo-partido logo-pl"
+                    >
+                </label>
+
+                <label class="opcao">
+                    <input type="radio" name="pretensaoVoto" value="Branco">
+                    Branco
+                </label>
+            </fieldset>
+
+            <!-- RESULTADO ESPERADO -->
+            <fieldset class="bloco">
+                <legend>Resultado esperado</legend>
+
+                <p class="pergunta">
+                    Na sua opinião, quem vencerá a eleição presidencial de 2026?
+                </p>
+
+                <p class="ajuda">Selecione apenas uma opção.</p>
+
+                <label class="voto-opcao">
+                    <input
+                        type="radio"
+                        name="resultadoEsperado"
+                        value="Luiz Inácio Lula da Silva (PT)"
+                        required
+                    >
+                    <span>Luiz Inácio Lula da Silva (PT)</span>
+                    <img
+                        src="IMAGENS/logo-pt.png.png"
+                        alt="Logotipo do PT"
+                        class="logo-partido"
+                    >
+                </label>
+
+                <label class="voto-opcao">
+                    <input
+                        type="radio"
+                        name="resultadoEsperado"
+                        value="Flávio Bolsonaro (PL)"
+                    >
+                    <span>Flávio Bolsonaro (PL)</span>
+                    <img
+                        src="IMAGENS/logo-pl.jpg.jpg"
+                        alt="Logotipo do PL"
+                        class="logo-partido logo-pl"
+                    >
+                </label>
+
+                <label class="opcao">
+                    <input
+                        type="radio"
+                        name="resultadoEsperado"
+                        value="Não sei / prefiro não responder"
+                    >
+                    Não sei / prefiro não responder
+                </label>
+            </fieldset>
+
+            <div class="acoes">
+                <button type="submit" class="botao-principal">
+                    Enviar respostas
+                </button>
+
+                <button type="reset" class="botao-secundario">
+                    Limpar formulário
+                </button>
+            </div>
+
+            <p id="mensagem" class="mensagem" role="status" aria-live="polite"></p>
+
+        </form>
+
+        <footer class="rodape">
+            DataVotoCesf · Colégio Sagrada Família · Campo Largo/PR
+        </footer>
+
+    </main>
+
+</body>
+</html>
