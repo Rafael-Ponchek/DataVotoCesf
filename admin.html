@@ -1,0 +1,295 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administração | DataVotoCesf</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px;
+            font-family: Arial, sans-serif;
+            background: #f2f5fa;
+            color: #24364b;
+        }
+
+        header {
+            background: #294161;
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+        }
+
+        .painel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        .acoes {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        button, input {
+            padding: 11px;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input {
+            border: 1px solid #ccd5e0;
+            flex: 1;
+            min-width: 180px;
+        }
+
+        button {
+            background: #294161;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #3c5c80;
+        }
+
+        #status {
+            margin: 12px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .tabela-container {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 900px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #e1e7ef;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #eaf0f7;
+        }
+
+        tr:hover td {
+            background: #f8faff;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 12px;
+            }
+
+            header, .painel {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>DataVotoCesf</h1>
+        <p>Painel de consulta das respostas da pesquisa.</p>
+    </header>
+
+    <main class="painel">
+        <h2>Respostas recebidas</h2>
+
+        <div class="acoes">
+            <input
+                id="busca"
+                type="search"
+                placeholder="Buscar nas respostas..."
+                aria-label="Buscar nas respostas"
+            >
+
+            <button id="atualizar" type="button">
+                Atualizar
+            </button>
+        </div>
+
+        <p id="status" role="status">Carregando respostas...</p>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Faixa etária</th>
+                        <th>Gênero</th>
+                        <th>Bairro</th>
+                        <th>Escolaridade</th>
+                        <th>Renda familiar</th>
+                        <th>Prioridades</th>
+                        <th>Meios de informação</th>
+                        <th>Intenção de voto</th>
+                        <th>Resultado esperado</th>
+                    </tr>
+                </thead>
+
+                <tbody id="lista-respostas">
+                    <tr>
+                        <td colspan="10">Carregando...</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+        import {
+            getDatabase,
+            ref,
+            onValue
+        } from
+            "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+        // Deve ser a mesma configuração usada no script.js
+        const firebaseConfig = {
+            apiKey: "AIzaSyDqXGQcAPyZ37Pnl7bFmbqzNfv3a6SjCXE",
+            authDomain: "data-voto-cesf2.firebaseapp.com",
+            databaseURL: "https://data-voto-cesf2-default-rtdb.firebaseio.com",
+            projectId: "data-voto-cesf2",
+            storageBucket: "data-voto-cesf2.firebasestorage.app",
+            messagingSenderId: "724147999457",
+            appId: "1:724147999457:web:3254dbc2eea62aeb969da0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        const status = document.querySelector("#status");
+        const corpoTabela = document.querySelector("#lista-respostas");
+        const busca = document.querySelector("#busca");
+
+        let respostas = [];
+
+        function textoSeguro(valor) {
+            if (Array.isArray(valor)) {
+                return valor.join(", ");
+            }
+
+            if (valor === null || valor === undefined || valor === "") {
+                return "—";
+            }
+
+            return String(valor);
+        }
+
+        function formatarData(valor) {
+            if (!valor || typeof valor !== "number") {
+                return "—";
+            }
+
+            return new Date(valor).toLocaleString("pt-BR");
+        }
+
+        function adicionarCelula(linha, valor) {
+            const celula = document.createElement("td");
+            celula.textContent = valor;
+            linha.appendChild(celula);
+        }
+
+        function renderizarRespostas() {
+            const termo = busca.value.trim().toLowerCase();
+
+            const filtradas = respostas.filter(({ dados }) =>
+                JSON.stringify(dados).toLowerCase().includes(termo)
+            );
+
+            corpoTabela.replaceChildren();
+
+            if (filtradas.length === 0) {
+                const linha = document.createElement("tr");
+                const celula = document.createElement("td");
+
+                celula.colSpan = 10;
+                celula.textContent = "Nenhuma resposta encontrada.";
+                linha.appendChild(celula);
+                corpoTabela.appendChild(linha);
+            } else {
+                filtradas.forEach(({ dados }) => {
+                    const linha = document.createElement("tr");
+
+                    adicionarCelula(linha, formatarData(dados.dataEnvio));
+                    adicionarCelula(linha, textoSeguro(dados.faixaEtaria));
+                    adicionarCelula(linha, textoSeguro(dados.genero));
+                    adicionarCelula(linha, textoSeguro(dados.bairro));
+                    adicionarCelula(linha, textoSeguro(dados.escolaridade));
+                    adicionarCelula(linha, textoSeguro(dados.rendaFamiliar));
+                    adicionarCelula(linha, textoSeguro(dados.prioridades));
+                    adicionarCelula(linha, textoSeguro(dados.meiosInformacao));
+                    adicionarCelula(linha, textoSeguro(dados.pretensaoVoto));
+                    adicionarCelula(linha, textoSeguro(dados.resultadoEsperado));
+
+                    corpoTabela.appendChild(linha);
+                });
+            }
+
+            status.textContent =
+                `${filtradas.length} resposta(s) exibida(s) de ${respostas.length}.`;
+        }
+
+        function carregarRespostas() {
+            status.textContent = "Carregando respostas...";
+
+            onValue(
+                ref(database, "respostas"),
+                (snapshot) => {
+                    const dados = snapshot.val() || {};
+
+                    respostas = Object.entries(dados)
+                        .map(([id, resposta]) => ({
+                            id,
+                            dados: resposta
+                        }))
+                        .reverse();
+
+                    renderizarRespostas();
+                },
+                (erro) => {
+                    console.error("Erro ao carregar respostas:", erro);
+                    status.textContent =
+                        "Não foi possível carregar as respostas. Verifique as regras de acesso do Firebase.";
+                },
+                {
+                    onlyOnce: true
+                }
+            );
+        }
+
+        busca.addEventListener("input", renderizarRespostas);
+        document.querySelector("#atualizar")
+            .addEventListener("click", carregarRespostas);
+
+        carregarRespostas();
+    </script>
+</body>
+</html>
