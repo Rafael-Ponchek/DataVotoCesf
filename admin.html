@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Administração | DataVotoCesf</title>
+    <title>Administração - DataVotoCesf</title>
 
     <style>
         * {
@@ -16,60 +16,66 @@
             padding: 24px;
             font-family: Arial, sans-serif;
             background: #f2f5fa;
-            color: #24364b;
+            color: #294161;
         }
 
         header {
             background: #294161;
             color: white;
-            padding: 24px;
+            padding: 22px;
             border-radius: 12px;
             margin-bottom: 20px;
         }
 
-        h1 {
-            margin: 0 0 8px;
+        h1, h2 {
+            margin-top: 0;
         }
 
         .painel {
             background: white;
             padding: 20px;
             border-radius: 12px;
-            box-shadow: 0 3px 12px #00000012;
+            margin-bottom: 20px;
         }
 
-        .acoes {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 16px;
-        }
-
-        button, input {
+        input, button {
             padding: 11px;
-            border-radius: 6px;
             font-size: 15px;
+            border-radius: 6px;
         }
 
         input {
             border: 1px solid #ccd5e0;
-            flex: 1;
-            min-width: 180px;
+            width: 100%;
+            margin-bottom: 10px;
         }
 
         button {
-            background: #294161;
-            color: white;
             border: none;
             cursor: pointer;
+            color: white;
+            background: #294161;
+            margin: 3px;
         }
 
         button:hover {
-            background: #3c5c80;
+            opacity: 0.85;
         }
 
-        #status {
-            margin: 12px 0;
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .perigo {
+            background: #b42318;
+        }
+
+        .sucesso {
+            background: #18794e;
+        }
+
+        #mensagem {
             overflow-wrap: anywhere;
         }
 
@@ -80,12 +86,12 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 900px;
+            min-width: 1000px;
         }
 
         th, td {
             padding: 12px;
-            border-bottom: 1px solid #e1e7ef;
+            border-bottom: 1px solid #ddd;
             text-align: left;
             vertical-align: top;
         }
@@ -94,8 +100,13 @@
             background: #eaf0f7;
         }
 
-        tr:hover td {
-            background: #f8faff;
+        td {
+            overflow-wrap: anywhere;
+            max-width: 250px;
+        }
+
+        #painel-respostas {
+            display: none;
         }
 
         @media (max-width: 600px) {
@@ -103,8 +114,8 @@
                 padding: 12px;
             }
 
-            header, .painel {
-                padding: 16px;
+            .painel, header {
+                padding: 15px;
             }
         }
     </style>
@@ -113,26 +124,58 @@
 <body>
     <header>
         <h1>DataVotoCesf</h1>
-        <p>Painel de consulta das respostas da pesquisa.</p>
+        <p>Painel administrativo da pesquisa</p>
     </header>
 
-    <main class="painel">
-        <h2>Respostas recebidas</h2>
+    <section class="painel" id="painel-login">
+        <h2>Login do administrador</h2>
 
-        <div class="acoes">
+        <form id="form-login">
+            <label for="email">E-mail</label>
             <input
-                id="busca"
-                type="search"
-                placeholder="Buscar nas respostas..."
-                aria-label="Buscar nas respostas"
+                id="email"
+                type="email"
+                autocomplete="username"
+                required
             >
 
-            <button id="atualizar" type="button">
-                Atualizar
-            </button>
-        </div>
+            <label for="senha">Senha</label>
+            <input
+                id="senha"
+                type="password"
+                autocomplete="current-password"
+                required
+            >
 
-        <p id="status" role="status">Carregando respostas...</p>
+            <button type="submit">Entrar</button>
+        </form>
+    </section>
+
+    <main class="painel" id="painel-respostas">
+        <h2>Respostas recebidas</h2>
+
+        <p id="total">Carregando respostas...</p>
+
+        <input
+            type="search"
+            id="busca"
+            placeholder="Buscar uma resposta..."
+            aria-label="Buscar respostas"
+        >
+
+        <button type="button" id="atualizar" class="sucesso">
+            Atualizar lista
+        </button>
+
+        <button type="button" id="excluir-todas" class="perigo">
+            Excluir todas as respostas
+        </button>
+
+        <button type="button" id="sair">
+            Sair
+        </button>
+
+        <p id="mensagem" role="status"></p>
 
         <div class="tabela-container">
             <table>
@@ -141,19 +184,24 @@
                         <th>Data</th>
                         <th>Faixa etária</th>
                         <th>Gênero</th>
-                        <th>Bairro</th>
+                        <th>Raça/cor</th>
                         <th>Escolaridade</th>
+                        <th>Estado</th>
+                        <th>Bairro</th>
+                        <th>Moradia</th>
+                        <th>Moradores</th>
                         <th>Renda familiar</th>
                         <th>Prioridades</th>
                         <th>Meios de informação</th>
                         <th>Intenção de voto</th>
                         <th>Resultado esperado</th>
+                        <th>Ação</th>
                     </tr>
                 </thead>
 
                 <tbody id="lista-respostas">
                     <tr>
-                        <td colspan="10">Carregando...</td>
+                        <td colspan="15">Carregando...</td>
                     </tr>
                 </tbody>
             </table>
@@ -167,13 +215,22 @@
         import {
             getDatabase,
             ref,
-            onValue
+            onValue,
+            remove,
+            get
         } from
             "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
-        // Deve ser a mesma configuração usada no script.js
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged
+        } from
+            "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
         const firebaseConfig = {
-            apiKey: "AIzaSyDqXGQcAPyZ37Pnl7bFmbqzNfv3a6SjCXE",
+            apiKey: "AIzaSyDqXGQcAPyZ37Pnlb7fmbqzNfv3a6SjCXE",
             authDomain: "data-voto-cesf2.firebaseapp.com",
             databaseURL: "https://data-voto-cesf2-default-rtdb.firebaseio.com",
             projectId: "data-voto-cesf2",
@@ -184,27 +241,42 @@
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
+        const auth = getAuth(app);
 
-        const status = document.querySelector("#status");
-        const corpoTabela = document.querySelector("#lista-respostas");
+        const painelLogin = document.querySelector("#painel-login");
+        const painelRespostas = document.querySelector("#painel-respostas");
+        const formularioLogin = document.querySelector("#form-login");
+        const lista = document.querySelector("#lista-respostas");
+        const mensagem = document.querySelector("#mensagem");
+        const total = document.querySelector("#total");
         const busca = document.querySelector("#busca");
 
         let respostas = [];
+        let pararEscuta = null;
+        let usuarioAutorizado = false;
 
-        function textoSeguro(valor) {
-            if (Array.isArray(valor)) {
-                return valor.join(", ");
-            }
+        function mostrarMensagem(texto) {
+            mensagem.textContent = texto;
+        }
 
+        function formatarValor(valor) {
             if (valor === null || valor === undefined || valor === "") {
                 return "—";
+            }
+
+            if (Array.isArray(valor)) {
+                return valor.map(formatarValor).join(", ");
+            }
+
+            if (typeof valor === "object") {
+                return JSON.stringify(valor);
             }
 
             return String(valor);
         }
 
         function formatarData(valor) {
-            if (!valor || typeof valor !== "number") {
+            if (typeof valor !== "number") {
                 return "—";
             }
 
@@ -218,78 +290,231 @@
         }
 
         function renderizarRespostas() {
+            if (!usuarioAutorizado) return;
+
             const termo = busca.value.trim().toLowerCase();
 
             const filtradas = respostas.filter(({ dados }) =>
                 JSON.stringify(dados).toLowerCase().includes(termo)
             );
 
-            corpoTabela.replaceChildren();
+            lista.replaceChildren();
+
+            total.textContent =
+                `${respostas.length} resposta(s) cadastrada(s).`;
 
             if (filtradas.length === 0) {
                 const linha = document.createElement("tr");
                 const celula = document.createElement("td");
 
-                celula.colSpan = 10;
+                celula.colSpan = 15;
                 celula.textContent = "Nenhuma resposta encontrada.";
+
                 linha.appendChild(celula);
-                corpoTabela.appendChild(linha);
-            } else {
-                filtradas.forEach(({ dados }) => {
-                    const linha = document.createElement("tr");
-
-                    adicionarCelula(linha, formatarData(dados.dataEnvio));
-                    adicionarCelula(linha, textoSeguro(dados.faixaEtaria));
-                    adicionarCelula(linha, textoSeguro(dados.genero));
-                    adicionarCelula(linha, textoSeguro(dados.bairro));
-                    adicionarCelula(linha, textoSeguro(dados.escolaridade));
-                    adicionarCelula(linha, textoSeguro(dados.rendaFamiliar));
-                    adicionarCelula(linha, textoSeguro(dados.prioridades));
-                    adicionarCelula(linha, textoSeguro(dados.meiosInformacao));
-                    adicionarCelula(linha, textoSeguro(dados.pretensaoVoto));
-                    adicionarCelula(linha, textoSeguro(dados.resultadoEsperado));
-
-                    corpoTabela.appendChild(linha);
-                });
+                lista.appendChild(linha);
+                return;
             }
 
-            status.textContent =
-                `${filtradas.length} resposta(s) exibida(s) de ${respostas.length}.`;
+            filtradas.forEach(({ id, dados }) => {
+                const linha = document.createElement("tr");
+
+                adicionarCelula(linha, formatarData(dados.dataEnvio));
+                adicionarCelula(linha, formatarValor(dados.faixaEtaria));
+                adicionarCelula(linha, formatarValor(dados.genero));
+                adicionarCelula(linha, formatarValor(dados.racaCor));
+                adicionarCelula(linha, formatarValor(dados.escolaridade));
+                adicionarCelula(linha, formatarValor(dados.estado));
+                adicionarCelula(linha, formatarValor(dados.bairro));
+                adicionarCelula(linha, formatarValor(dados.moradia));
+                adicionarCelula(linha, formatarValor(dados.moradores));
+                adicionarCelula(linha, formatarValor(dados.rendaFamiliar));
+                adicionarCelula(linha, formatarValor(dados.prioridades));
+                adicionarCelula(linha, formatarValor(dados.meiosInformacao));
+                adicionarCelula(linha, formatarValor(dados.pretensaoVoto));
+                adicionarCelula(linha, formatarValor(dados.resultadoEsperado));
+
+                const celulaAcao = document.createElement("td");
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+                botao.textContent = "Excluir";
+                botao.className = "perigo";
+
+                botao.addEventListener("click", () => {
+                    excluirResposta(id);
+                });
+
+                celulaAcao.appendChild(botao);
+                linha.appendChild(celulaAcao);
+                lista.appendChild(linha);
+            });
         }
 
-        function carregarRespostas() {
-            status.textContent = "Carregando respostas...";
+        function iniciarEscuta() {
+            if (pararEscuta) {
+                pararEscuta();
+            }
 
-            onValue(
+            mostrarMensagem("Carregando respostas...");
+
+            pararEscuta = onValue(
                 ref(database, "respostas"),
                 (snapshot) => {
                     const dados = snapshot.val() || {};
 
-                    respostas = Object.entries(dados)
-                        .map(([id, resposta]) => ({
+                    respostas = Object.entries(dados).map(
+                        ([id, resposta]) => ({
                             id,
                             dados: resposta
-                        }))
-                        .reverse();
+                        })
+                    ).reverse();
 
                     renderizarRespostas();
+                    mostrarMensagem("");
                 },
                 (erro) => {
-                    console.error("Erro ao carregar respostas:", erro);
-                    status.textContent =
-                        "Não foi possível carregar as respostas. Verifique as regras de acesso do Firebase.";
-                },
-                {
-                    onlyOnce: true
+                    console.error(erro);
+                    mostrarMensagem(
+                        "Não foi possível ler as respostas. Verifique as regras do Firebase."
+                    );
                 }
             );
         }
 
-        busca.addEventListener("input", renderizarRespostas);
-        document.querySelector("#atualizar")
-            .addEventListener("click", carregarRespostas);
+        async function excluirResposta(id) {
+            if (!usuarioAutorizado) return;
 
-        carregarRespostas();
+            const confirmar = confirm(
+                "Deseja realmente excluir esta resposta? Essa ação não pode ser desfeita."
+            );
+
+            if (!confirmar) return;
+
+            try {
+                await remove(ref(database, `respostas/${id}`));
+                mostrarMensagem("Resposta excluída com sucesso.");
+            } catch (erro) {
+                console.error(erro);
+                mostrarMensagem(
+                    "Não foi possível excluir. Verifique suas permissões."
+                );
+            }
+        }
+
+        async function excluirTodas() {
+            if (!usuarioAutorizado) return;
+
+            if (respostas.length === 0) {
+                mostrarMensagem("Não existem respostas para excluir.");
+                return;
+            }
+
+            const confirmar = confirm(
+                `ATENÇÃO: você vai excluir TODAS as ${respostas.length} respostas. Deseja continuar?`
+            );
+
+            if (!confirmar) return;
+
+            const confirmarNovamente = confirm(
+                "Confirme novamente: deseja apagar todas as respostas da pesquisa?"
+            );
+
+            if (!confirmarNovamente) return;
+
+            try {
+                await remove(ref(database, "respostas"));
+                mostrarMensagem("Todas as respostas foram excluídas.");
+            } catch (erro) {
+                console.error(erro);
+                mostrarMensagem(
+                    "Não foi possível excluir todas. Verifique suas permissões."
+                );
+            }
+        }
+
+        formularioLogin.addEventListener("submit", async (evento) => {
+            evento.preventDefault();
+
+            mostrarMensagem("Verificando login...");
+
+            try {
+                await signInWithEmailAndPassword(
+                    auth,
+                    document.querySelector("#email").value.trim(),
+                    document.querySelector("#senha").value
+                );
+            } catch (erro) {
+                console.error(erro);
+                mostrarMensagem("Login inválido ou acesso não autorizado.");
+            }
+        });
+
+        onAuthStateChanged(auth, async (usuario) => {
+            usuarioAutorizado = false;
+
+            if (pararEscuta) {
+                pararEscuta();
+                pararEscuta = null;
+            }
+
+            painelRespostas.style.display = "none";
+            painelLogin.style.display = "block";
+            respostas = [];
+
+            if (!usuario) {
+                mostrarMensagem("");
+                return;
+            }
+
+            try {
+                const permissao = await get(
+                    ref(database, `admins/${usuario.uid}`)
+                );
+
+                if (permissao.val() !== true) {
+                    mostrarMensagem(
+                        "Esta conta não possui permissão de administrador."
+                    );
+
+                    await signOut(auth);
+                    return;
+                }
+
+                usuarioAutorizado = true;
+                painelLogin.style.display = "none";
+                painelRespostas.style.display = "block";
+
+                iniciarEscuta();
+            } catch (erro) {
+                console.error(erro);
+                mostrarMensagem(
+                    "Não foi possível verificar a permissão. Confira as regras do Firebase."
+                );
+
+                await signOut(auth);
+            }
+        });
+
+        document.querySelector("#atualizar").addEventListener(
+            "click",
+            () => {
+                if (usuarioAutorizado) iniciarEscuta();
+            }
+        );
+
+        document.querySelector("#excluir-todas").addEventListener(
+            "click",
+            excluirTodas
+        );
+
+        document.querySelector("#sair").addEventListener(
+            "click",
+            async () => {
+                await signOut(auth);
+            }
+        );
+
+        busca.addEventListener("input", renderizarRespostas);
     </script>
 </body>
 </html>
