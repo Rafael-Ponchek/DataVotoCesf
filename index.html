@@ -1,27 +1,67 @@
 
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DataVotoCesf | Pesquisa 2026</title>
     <link rel="stylesheet" href="style.css">
     <script src="script.js" type="module"></script>
+
+    <style>
+        .topo {
+            position: relative;
+        }
+
+        .botao-admin {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            display: inline-block;
+            padding: 10px 16px;
+            background: #f28c28;
+            color: #1f2933;
+            border: 1px solid #ffffff99;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .botao-admin:hover {
+            background: #ffad55;
+        }
+
+        @media (max-width: 600px) {
+            .topo {
+                padding-top: 65px;
+            }
+
+            .botao-admin {
+                top: 10px;
+                right: 10px;
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 
 <body>
-
     <header class="topo">
+        <a class="botao-admin" href="admin.html">
+            Área administrativa
+        </a>
+
         <div class="topo-texto">
-            <p class="etiqueta">COLÉGIO SAGRADA FAMÍLIA · CAMPO LARGO/PR</p>
+            <p class="etiqueta">
+                COLÉGIO SAGRADA FAMÍLIA · CAMPO LARGO/PR
+            </p>
             <h1>DataVotoCesf</h1>
             <p>Pesquisa eleitoral e socioeconômica</p>
         </div>
     </header>
 
     <main class="container">
-
         <section class="introducao">
             <h2>Sua opinião importa!</h2>
             <p>
@@ -35,8 +75,6 @@
         </section>
 
         <form id="form-pesquisa">
-
-            <!-- PERFIL -->
             <fieldset class="bloco">
                 <legend>Perfil demográfico, cultural e socioeconômico</legend>
 
@@ -54,17 +92,14 @@
 
                 <fieldset class="subgrupo">
                     <legend>Gênero</legend>
-
                     <label class="opcao">
                         <input type="radio" name="genero" value="Feminino" required>
                         Feminino
                     </label>
-
                     <label class="opcao">
                         <input type="radio" name="genero" value="Masculino">
                         Masculino
                     </label>
-
                     <label class="opcao">
                         <input type="radio" name="genero" value="Prefiro não informar">
                         Prefiro não informar
@@ -181,13 +216,10 @@
                         <option>Prefiro não informar</option>
                     </select>
                 </div>
-
             </fieldset>
 
-            <!-- PRIORIDADES -->
             <fieldset class="bloco">
                 <legend>Quais desses itens você almeja para os próximos 4 anos?</legend>
-
                 <p class="ajuda">Você pode marcar quantas opções quiser.</p>
 
                 <label class="opcao">
@@ -237,14 +269,11 @@
                 </label>
             </fieldset>
 
-            <!-- MÍDIA | INFORMAÇÃO -->
             <fieldset class="bloco">
                 <legend>Mídia e informação nas eleições 2026</legend>
-
                 <p class="pergunta">
                     Qual seu principal meio de informação para essas eleições?
                 </p>
-
                 <p class="ajuda">Você pode marcar quantas opções quiser.</p>
 
                 <label class="opcao">
@@ -273,39 +302,24 @@
                 </label>
             </fieldset>
 
-            <!-- PRETENSÃO DO VOTO -->
             <fieldset class="bloco">
                 <legend>Pretensão de voto</legend>
-
                 <p class="ajuda">Selecione apenas uma opção.</p>
 
                 <label class="voto-opcao">
-                    <input
-                        type="radio"
-                        name="pretensaoVoto"
-                        value="Luiz Inácio Lula da Silva (PT)"
-                        required
-                    >
+                    <input type="radio" name="pretensaoVoto"
+                        value="Luiz Inácio Lula da Silva (PT)" required>
                     <span>Luiz Inácio Lula da Silva (PT)</span>
-                    <img
-                        src="IMAGENS/logo-pt.png.png"
-                        alt="Logotipo do PT"
-                        class="logo-partido"
-                    >
+                    <img src="IMAGENS/logo-pt.png.png"
+                        alt="Logotipo do PT" class="logo-partido">
                 </label>
 
                 <label class="voto-opcao">
-                    <input
-                        type="radio"
-                        name="pretensaoVoto"
-                        value="Flávio Bolsonaro (PL)"
-                    >
+                    <input type="radio" name="pretensaoVoto"
+                        value="Flávio Bolsonaro (PL)">
                     <span>Flávio Bolsonaro (PL)</span>
-                    <img
-                        src="IMAGENS/logo-pl.jpg.jpg"
-                        alt="Logotipo do PL"
-                        class="logo-partido logo-pl"
-                    >
+                    <img src="IMAGENS/logo-pl.jpg.jpg"
+                        alt="Logotipo do PL" class="logo-partido logo-pl">
                 </label>
 
                 <label class="opcao">
@@ -314,51 +328,32 @@
                 </label>
             </fieldset>
 
-            <!-- RESULTADO ESPERADO -->
             <fieldset class="bloco">
                 <legend>Resultado esperado</legend>
-
                 <p class="pergunta">
                     Na sua opinião, quem vencerá a eleição presidencial de 2026?
                 </p>
-
                 <p class="ajuda">Selecione apenas uma opção.</p>
 
                 <label class="voto-opcao">
-                    <input
-                        type="radio"
-                        name="resultadoEsperado"
-                        value="Luiz Inácio Lula da Silva (PT)"
-                        required
-                    >
+                    <input type="radio" name="resultadoEsperado"
+                        value="Luiz Inácio Lula da Silva (PT)" required>
                     <span>Luiz Inácio Lula da Silva (PT)</span>
-                    <img
-                        src="IMAGENS/logo-pt.png.png"
-                        alt="Logotipo do PT"
-                        class="logo-partido"
-                    >
+                    <img src="IMAGENS/logo-pt.png.png"
+                        alt="Logotipo do PT" class="logo-partido">
                 </label>
 
                 <label class="voto-opcao">
-                    <input
-                        type="radio"
-                        name="resultadoEsperado"
-                        value="Flávio Bolsonaro (PL)"
-                    >
+                    <input type="radio" name="resultadoEsperado"
+                        value="Flávio Bolsonaro (PL)">
                     <span>Flávio Bolsonaro (PL)</span>
-                    <img
-                        src="IMAGENS/logo-pl.jpg.jpg"
-                        alt="Logotipo do PL"
-                        class="logo-partido logo-pl"
-                    >
+                    <img src="IMAGENS/logo-pl.jpg.jpg"
+                        alt="Logotipo do PL" class="logo-partido logo-pl">
                 </label>
 
                 <label class="opcao">
-                    <input
-                        type="radio"
-                        name="resultadoEsperado"
-                        value="Não sei / prefiro não responder"
-                    >
+                    <input type="radio" name="resultadoEsperado"
+                        value="Não sei / prefiro não responder">
                     Não sei / prefiro não responder
                 </label>
             </fieldset>
@@ -374,14 +369,11 @@
             </div>
 
             <p id="mensagem" class="mensagem" role="status" aria-live="polite"></p>
-
         </form>
 
         <footer class="rodape">
             DataVotoCesf · Colégio Sagrada Família · Campo Largo/PR
         </footer>
-
     </main>
-
 </body>
 </html>
