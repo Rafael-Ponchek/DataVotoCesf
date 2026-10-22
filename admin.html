@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -41,47 +42,36 @@
             font-size: 16px;
         }
 
-        .botoes-login {
-            display: flex;
-            gap: 10px;
+        button, .botao-voltar {
+            display: block;
             width: 100%;
-            margin-top: 15px;
-        }
-
-        .botoes-login button,
-        .botoes-login .botao-voltar {
-            flex: 1;
-            min-width: 0;
-            height: 45px;
-            margin: 0;
-            padding: 10px 5px;
+            padding: 12px 16px;
+            margin-top: 10px;
             border: none;
             border-radius: 7px;
-            font-size: 14px;
+            font-size: 16px;
             cursor: pointer;
             text-align: center;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            transition: background-color 0.2s;
         }
 
         .botao-entrar {
-            background-color: #294161;
+            background: #294161;
             color: white;
         }
 
         .botao-entrar:hover {
-            background-color: #1c3049;
+            background: #1c3049;
         }
 
         .botao-voltar {
-            background-color: #b42318;
+            background: #6c757d;
             color: white;
         }
 
         .botao-voltar:hover {
-            background-color: #8f1c13;
+            background: #565e64;
         }
 
         #painel {
@@ -104,28 +94,20 @@
             font-size: 16px;
         }
 
-        .controles button {
-            width: auto;
-            padding: 12px 16px;
-            margin: 0;
-            border: none;
-            border-radius: 7px;
-            font-size: 15px;
-            cursor: pointer;
-        }
-
         .botao-atualizar {
+            width: auto;
             background: #294161;
             color: white;
         }
 
-        .botao-excluir-todos,
-        .botao-excluir {
+        .botao-excluir-todos {
+            width: auto;
             background: #b42318;
             color: white;
         }
 
         .botao-sair {
+            width: auto;
             background: #6c757d;
             color: white;
         }
@@ -174,10 +156,8 @@
 
         .botao-excluir {
             min-width: 100px;
-            padding: 10px 14px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
+            background: #b42318;
+            color: white;
         }
 
         .mensagem {
@@ -195,24 +175,12 @@
                 padding: 22px;
             }
 
-            .botoes-login {
-                gap: 8px;
-            }
-
-            .botoes-login button,
-            .botoes-login .botao-voltar {
-                font-size: 12px;
-                padding: 8px 3px;
-            }
-
             .controles {
                 flex-direction: column;
             }
 
-            .controles input,
             .controles button {
                 width: 100%;
-                min-width: 0;
             }
         }
     </style>
@@ -232,15 +200,13 @@
                 required
             >
 
-            <div class="botoes-login">
-                <button type="submit" class="botao-entrar">
-                    Entrar
-                </button>
+            <button type="submit" class="botao-entrar">
+                Entrar
+            </button>
 
-                <a href="index.html" class="botao-voltar">
-                    Voltar à página inicial
-                </a>
-            </div>
+            <a href="index.html" class="botao-voltar">
+                Voltar à página inicial
+            </a>
         </form>
 
         <p id="mensagemLogin" class="mensagem"></p>
@@ -264,4 +230,229 @@
                 Excluir todas
             </button>
 
-            <button id="sair"
+            <button id="sair" class="botao-sair" type="button">
+                Sair
+            </button>
+        </div>
+
+        <p id="status" class="mensagem">Carregando respostas...</p>
+
+        <div class="tabela-container">
+            <table>
+                <thead>
+                    <tr id="cabecalho"></tr>
+                </thead>
+                <tbody id="corpoTabela"></tbody>
+            </table>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from
+            "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+        import {
+            getDatabase,
+            ref,
+            onValue,
+            remove
+        } from
+            "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDqXGQcAPyZ37Pnl7bFmbqzNfv3a6SjCXE",
+            authDomain: "data-voto-cesf2.firebaseapp.com",
+            databaseURL: "https://data-voto-cesf2-default-rtdb.firebaseio.com",
+            projectId: "data-voto-cesf2",
+            storageBucket: "data-voto-cesf2.firebasestorage.app",
+            messagingSenderId: "724147999457",
+            appId: "1:724147999457:web:3254dbc2eea62aeb969da0"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const respostasRef = ref(db, "respostas");
+
+        const login = document.getElementById("login");
+        const painel = document.getElementById("painel");
+        const formLogin = document.getElementById("formLogin");
+        const senhaAdmin = document.getElementById("senhaAdmin");
+        const mensagemLogin = document.getElementById("mensagemLogin");
+        const pesquisa = document.getElementById("pesquisa");
+        const cabecalho = document.getElementById("cabecalho");
+        const corpoTabela = document.getElementById("corpoTabela");
+        const status = document.getElementById("status");
+
+        let respostas = {};
+        let cancelarEscuta = null;
+
+        // A senha abaixo é apenas uma barreira visual para demonstração.
+        // Ela não protege os dados do Firebase de forma segura.
+        formLogin.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            if (senhaAdmin.value === "1322") {
+                login.style.display = "none";
+                painel.style.display = "block";
+                mensagemLogin.textContent = "";
+                iniciarLeitura();
+            } else {
+                mensagemLogin.textContent = "Senha incorreta.";
+                senhaAdmin.value = "";
+            }
+        });
+
+        function iniciarLeitura() {
+            if (cancelarEscuta) {
+                cancelarEscuta();
+            }
+
+            status.textContent = "Carregando respostas...";
+
+            cancelarEscuta = onValue(
+                respostasRef,
+                (snapshot) => {
+                    respostas = snapshot.val() || {};
+                    montarTabela();
+                },
+                (erro) => {
+                    status.textContent =
+                        "Erro ao carregar respostas: " + erro.message;
+                }
+            );
+        }
+
+        function montarTabela() {
+            cabecalho.replaceChildren();
+            corpoTabela.replaceChildren();
+
+            const registros = Object.entries(respostas);
+            const termo = pesquisa.value.trim().toLowerCase();
+
+            if (registros.length === 0) {
+                status.textContent = "Nenhuma resposta encontrada no Firebase.";
+                return;
+            }
+
+            const campos = new Set();
+
+            registros.forEach(([id, dados]) => {
+                if (dados && typeof dados === "object") {
+                    Object.keys(dados).forEach((campo) => campos.add(campo));
+                }
+            });
+
+            const colunas = ["ID", ...campos, "Ações"];
+
+            colunas.forEach((coluna) => {
+                const th = document.createElement("th");
+                th.textContent = coluna;
+                cabecalho.appendChild(th);
+            });
+
+            let exibidas = 0;
+
+            registros.forEach(([id, dados]) => {
+                const textoPesquisa =
+                    JSON.stringify(dados).toLowerCase() + " " + id.toLowerCase();
+
+                if (termo && !textoPesquisa.includes(termo)) {
+                    return;
+                }
+
+                const linha = document.createElement("tr");
+
+                const celulaId = document.createElement("td");
+                celulaId.textContent = id;
+                linha.appendChild(celulaId);
+
+                campos.forEach((campo) => {
+                    const celula = document.createElement("td");
+                    const valor = dados?.[campo];
+
+                    if (Array.isArray(valor)) {
+                        celula.textContent = valor.join(", ");
+                    } else if (valor && typeof valor === "object") {
+                        celula.textContent = JSON.stringify(valor);
+                    } else {
+                        celula.textContent = valor == null ? "" : String(valor);
+                    }
+
+                    linha.appendChild(celula);
+                });
+
+                const celulaAcao = document.createElement("td");
+                const botaoExcluir = document.createElement("button");
+
+                botaoExcluir.type = "button";
+                botaoExcluir.className = "botao-excluir";
+                botaoExcluir.textContent = "Excluir";
+
+                botaoExcluir.addEventListener("click", async () => {
+                    const confirmar = confirm(
+                        "Tem certeza de que deseja excluir esta resposta?"
+                    );
+
+                    if (!confirmar) return;
+
+                    try {
+                        await remove(ref(db, "respostas/" + id));
+                        status.textContent = "Resposta excluída.";
+                    } catch (erro) {
+                        alert("Não foi possível excluir: " + erro.message);
+                    }
+                });
+
+                celulaAcao.appendChild(botaoExcluir);
+                linha.appendChild(celulaAcao);
+                corpoTabela.appendChild(linha);
+                exibidas++;
+            });
+
+            status.textContent =
+                `${exibidas} resposta(s) exibida(s) de ${registros.length}.`;
+        }
+
+        pesquisa.addEventListener("input", montarTabela);
+
+        document.getElementById("atualizar").addEventListener("click", () => {
+            montarTabela();
+        });
+
+        document.getElementById("excluirTodos").addEventListener("click", async () => {
+            if (Object.keys(respostas).length === 0) {
+                alert("Não existem respostas para excluir.");
+                return;
+            }
+
+            const confirmar = confirm(
+                "Atenção: deseja realmente excluir TODAS as respostas?"
+            );
+
+            if (!confirmar) return;
+
+            try {
+                await remove(respostasRef);
+                status.textContent = "Todas as respostas foram excluídas.";
+            } catch (erro) {
+                alert("Não foi possível excluir as respostas: " + erro.message);
+            }
+        });
+
+        document.getElementById("sair").addEventListener("click", () => {
+            if (cancelarEscuta) {
+                cancelarEscuta();
+                cancelarEscuta = null;
+            }
+
+            painel.style.display = "none";
+            login.style.display = "block";
+            senhaAdmin.value = "";
+            pesquisa.value = "";
+            mensagemLogin.textContent = "";
+        });
+    </script>
+
+</body>
+</html>
+```
