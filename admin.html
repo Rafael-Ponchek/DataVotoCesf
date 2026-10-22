@@ -17,37 +17,49 @@
             font-family: Arial, sans-serif;
             background: #f2f5fa;
             color: #294161;
+            line-height: 1.6;
         }
 
         header {
             background: #294161;
             color: white;
-            padding: 22px;
+            padding: 26px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         h1, h2 {
             margin-top: 0;
         }
 
+        header h1 {
+            margin-bottom: 6px;
+        }
+
         .painel {
             background: white;
-            padding: 20px;
+            padding: 26px;
             border-radius: 12px;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px #173b5d12;
         }
 
         input, button {
-            padding: 11px;
-            font-size: 15px;
-            border-radius: 6px;
+            padding: 12px 15px;
+            font-size: 16px;
+            border-radius: 7px;
         }
 
         input {
             border: 1px solid #ccd5e0;
             width: 100%;
-            margin-bottom: 10px;
+            margin-bottom: 14px;
+        }
+
+        input:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #f8b15e;
+            outline-offset: 2px;
         }
 
         button {
@@ -55,7 +67,8 @@
             cursor: pointer;
             color: white;
             background: #294161;
-            margin: 3px;
+            margin: 5px 5px 5px 0;
+            font-weight: bold;
         }
 
         button:hover {
@@ -75,34 +88,69 @@
             background: #18794e;
         }
 
-        #mensagem {
+        #mensagem,
+        #mensagem-login {
             overflow-wrap: anywhere;
         }
 
+        #total {
+            font-size: 19px;
+            font-weight: bold;
+            margin: 18px 0;
+        }
+
         .tabela-container {
-            overflow-x: auto;
+            width: 100%;
+            max-height: 72vh;
+            overflow: auto;
+            border: 1px solid #d7e0eb;
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
         table {
             width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px;
+            border-collapse: separate;
+            border-spacing: 0;
+            min-width: 1600px;
+            font-size: 16px;
+            line-height: 1.6;
         }
 
         th, td {
-            padding: 12px;
-            border-bottom: 1px solid #ddd;
+            padding: 18px 20px;
+            border-bottom: 1px solid #d7e0eb;
             text-align: left;
             vertical-align: top;
         }
 
         th {
+            position: sticky;
+            top: 0;
+            z-index: 1;
             background: #eaf0f7;
+            color: #294161;
+            font-size: 15px;
+            line-height: 1.5;
+            white-space: normal;
         }
 
         td {
             overflow-wrap: anywhere;
-            max-width: 250px;
+            min-width: 120px;
+            max-width: 300px;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f7f9fc;
+        }
+
+        tbody tr:hover {
+            background: #edf5ff;
+        }
+
+        td button {
+            white-space: nowrap;
         }
 
         #painel-respostas {
@@ -115,7 +163,24 @@
             }
 
             .painel, header {
-                padding: 15px;
+                padding: 16px;
+            }
+
+            header {
+                margin-bottom: 16px;
+            }
+
+            table {
+                min-width: 1450px;
+                font-size: 15px;
+            }
+
+            th, td {
+                padding: 16px;
+            }
+
+            .painel button {
+                margin: 5px 0;
             }
         }
     </style>
@@ -196,7 +261,9 @@
 
                 <tbody id="lista-respostas">
                     <tr>
-                        <td colspan="15">Faça login para carregar as respostas.</td>
+                        <td colspan="15">
+                            Faça login para carregar as respostas.
+                        </td>
                     </tr>
                 </tbody>
             </table>
