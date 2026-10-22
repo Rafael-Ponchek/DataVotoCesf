@@ -131,23 +131,18 @@
         <h2>Login do administrador</h2>
 
         <form id="form-login">
-            <label for="email">E-mail</label>
-            <input
-                id="email"
-                type="email"
-                autocomplete="username"
-                required
-            >
+            <label for="senha">Senha administrativa</label>
 
-            <label for="senha">Senha</label>
             <input
                 id="senha"
                 type="password"
                 autocomplete="current-password"
+                placeholder="Digite a senha"
                 required
             >
 
             <button type="submit">Entrar</button>
+            <p id="mensagem-login" role="status"></p>
         </form>
     </section>
 
@@ -201,7 +196,7 @@
 
                 <tbody id="lista-respostas">
                     <tr>
-                        <td colspan="15">Carregando...</td>
+                        <td colspan="15">Faça login para carregar as respostas.</td>
                     </tr>
                 </tbody>
             </table>
@@ -216,21 +211,16 @@
             getDatabase,
             ref,
             onValue,
-            remove,
-            get
+            remove
         } from
             "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
-        import {
-            getAuth,
-            signInWithEmailAndPassword,
-            signOut,
-            onAuthStateChanged
-        } from
-            "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+        // Senha para demonstração escolar.
+        // Não é uma autenticação segura para dados reais.
+        const SENHA_ADMIN = "1322";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDqXGQcAPyZ37Pnlb7fmbqzNfv3a6SjCXE",
+            apiKey: "AIzaSyDqXGQcAPyZ37Pnl7bFmbqzNfv3a6SjCXE",
             authDomain: "data-voto-cesf2.firebaseapp.com",
             databaseURL: "https://data-voto-cesf2-default-rtdb.firebaseio.com",
             projectId: "data-voto-cesf2",
@@ -241,11 +231,12 @@
 
         const app = initializeApp(firebaseConfig);
         const database = getDatabase(app);
-        const auth = getAuth(app);
 
         const painelLogin = document.querySelector("#painel-login");
         const painelRespostas = document.querySelector("#painel-respostas");
         const formularioLogin = document.querySelector("#form-login");
+        const campoSenha = document.querySelector("#senha");
+        const mensagemLogin = document.querySelector("#mensagem-login");
         const lista = document.querySelector("#lista-respostas");
         const mensagem = document.querySelector("#mensagem");
         const total = document.querySelector("#total");
@@ -353,6 +344,7 @@
         function iniciarEscuta() {
             if (pararEscuta) {
                 pararEscuta();
+                pararEscuta = null;
             }
 
             mostrarMensagem("Carregando respostas...");
@@ -360,6 +352,8 @@
             pararEscuta = onValue(
                 ref(database, "respostas"),
                 (snapshot) => {
+                    if (!usuarioAutorizado) return;
+
                     const dados = snapshot.val() || {};
 
                     respostas = Object.entries(dados).map(
@@ -396,7 +390,7 @@
             } catch (erro) {
                 console.error(erro);
                 mostrarMensagem(
-                    "Não foi possível excluir. Verifique suas permissões."
+                    "Não foi possível excluir. Verifique as permissões do Firebase."
                 );
             }
         }
@@ -427,72 +421,29 @@
             } catch (erro) {
                 console.error(erro);
                 mostrarMensagem(
-                    "Não foi possível excluir todas. Verifique suas permissões."
+                    "Não foi possível excluir. Verifique as permissões do Firebase."
                 );
             }
         }
 
-        formularioLogin.addEventListener("submit", async (evento) => {
+        formularioLogin.addEventListener("submit", (evento) => {
             evento.preventDefault();
 
-            mostrarMensagem("Verificando login...");
+            mensagemLogin.textContent = "";
 
-            try {
-                await signInWithEmailAndPassword(
-                    auth,
-                    document.querySelector("#email").value.trim(),
-                    document.querySelector("#senha").value
-                );
-            } catch (erro) {
-                console.error(erro);
-                mostrarMensagem("Login inválido ou acesso não autorizado.");
-            }
-        });
-
-        onAuthStateChanged(auth, async (usuario) => {
-            usuarioAutorizado = false;
-
-            if (pararEscuta) {
-                pararEscuta();
-                pararEscuta = null;
-            }
-
-            painelRespostas.style.display = "none";
-            painelLogin.style.display = "block";
-            respostas = [];
-
-            if (!usuario) {
-                mostrarMensagem("");
+            if (campoSenha.value !== SENHA_ADMIN) {
+                mensagemLogin.textContent = "Senha incorreta.";
+                campoSenha.value = "";
+                campoSenha.focus();
                 return;
             }
 
-            try {
-                const permissao = await get(
-                    ref(database, `admins/${usuario.uid}`)
-                );
+            usuarioAutorizado = true;
+            painelLogin.style.display = "none";
+            painelRespostas.style.display = "block";
+            mensagemLogin.textContent = "";
 
-                if (permissao.val() !== true) {
-                    mostrarMensagem(
-                        "Esta conta não possui permissão de administrador."
-                    );
-
-                    await signOut(auth);
-                    return;
-                }
-
-                usuarioAutorizado = true;
-                painelLogin.style.display = "none";
-                painelRespostas.style.display = "block";
-
-                iniciarEscuta();
-            } catch (erro) {
-                console.error(erro);
-                mostrarMensagem(
-                    "Não foi possível verificar a permissão. Confira as regras do Firebase."
-                );
-
-                await signOut(auth);
-            }
+            iniciarEscuta();
         });
 
         document.querySelector("#atualizar").addEventListener(
@@ -507,12 +458,25 @@
             excluirTodas
         );
 
-        document.querySelector("#sair").addEventListener(
-            "click",
-            async () => {
-                await signOut(auth);
+        document.querySelector("#sair").addEventListener("click", () => {
+            usuarioAutorizado = false;
+
+            if (pararEscuta) {
+                pararEscuta();
+                pararEscuta = null;
             }
-        );
+
+            respostas = [];
+            lista.replaceChildren();
+            total.textContent = "Faça login para carregar as respostas.";
+
+            painelRespostas.style.display = "none";
+            painelLogin.style.display = "block";
+
+            campoSenha.value = "";
+            mensagemLogin.textContent = "";
+            mostrarMensagem("");
+        });
 
         busca.addEventListener("input", renderizarRespostas);
     </script>
