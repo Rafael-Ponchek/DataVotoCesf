@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Área Administrativa - DataVotoCesf</title>
+    <title>Administração - DataVotoCesf</title>
 
     <style>
         * {
@@ -13,156 +13,148 @@
 
         body {
             margin: 0;
-            padding: 25px;
+            padding: 24px;
             font-family: Arial, sans-serif;
-            background: #f2f4f8;
-            color: #243447;
+            background: #f2f5fa;
+            color: #294161;
+            line-height: 1.6;
+        }
+
+        header {
+            background: #294161;
+            color: white;
+            padding: 26px;
+            border-radius: 12px;
+            margin-bottom: 24px;
         }
 
         h1, h2 {
-            text-align: center;
+            margin-top: 0;
         }
 
-        .login-container {
-            max-width: 400px;
-            margin: 60px auto;
-            padding: 30px;
+        header h1 {
+            margin-bottom: 6px;
+        }
+
+        .painel {
             background: white;
+            padding: 26px;
             border-radius: 12px;
-            box-shadow: 0 4px 15px #00000018;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px #173b5d12;
         }
 
-        .login-container input {
-            display: block;
-            width: 100%;
-            padding: 12px;
-            margin: 15px 0;
-            border: 1px solid #ccc;
-            border-radius: 6px;
+        input, button {
+            padding: 12px 15px;
             font-size: 16px;
+            border-radius: 7px;
         }
 
-        button, .botao-voltar {
-            display: block;
+        input {
+            border: 1px solid #ccd5e0;
             width: 100%;
-            padding: 12px 16px;
-            margin-top: 10px;
+            margin-bottom: 14px;
+        }
+
+        input:focus-visible,
+        button:focus-visible {
+            outline: 3px solid #f8b15e;
+            outline-offset: 2px;
+        }
+
+        button {
             border: none;
-            border-radius: 7px;
-            font-size: 16px;
             cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-            transition: background-color 0.2s;
-        }
-
-        .botao-entrar {
+            color: white;
             background: #294161;
-            color: white;
+            margin: 5px 5px 5px 0;
+            font-weight: bold;
         }
 
-        .botao-entrar:hover {
-            background: #1c3049;
+        button:hover {
+            opacity: 0.85;
         }
 
-        .botao-voltar {
-            background: #6c757d;
-            color: white;
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
 
-        .botao-voltar:hover {
-            background: #565e64;
-        }
-
-        #painel {
-            display: none;
-        }
-
-        .controles {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin: 20px 0;
-        }
-
-        .controles input {
-            flex: 1;
-            min-width: 220px;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 7px;
-            font-size: 16px;
-        }
-
-        .botao-atualizar {
-            width: auto;
-            background: #294161;
-            color: white;
-        }
-
-        .botao-excluir-todos {
-            width: auto;
+        .perigo {
             background: #b42318;
-            color: white;
         }
 
-        .botao-sair {
-            width: auto;
-            background: #6c757d;
-            color: white;
+        .sucesso {
+            background: #18794e;
+        }
+
+        #mensagem,
+        #mensagem-login {
+            overflow-wrap: anywhere;
+        }
+
+        #total {
+            font-size: 19px;
+            font-weight: bold;
+            margin: 18px 0;
         }
 
         .tabela-container {
             width: 100%;
             max-height: 72vh;
             overflow: auto;
-            background: white;
-            border-radius: 8px;
-            border: 1px solid #d9dee7;
+            border: 1px solid #d7e0eb;
+            border-radius: 10px;
+            margin-top: 20px;
         }
 
         table {
             width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
             min-width: 1600px;
-            border-collapse: collapse;
             font-size: 16px;
+            line-height: 1.6;
         }
 
         th, td {
             padding: 18px 20px;
+            border-bottom: 1px solid #d7e0eb;
             text-align: left;
             vertical-align: top;
-            border: 1px solid #d9dee7;
-            line-height: 1.6;
-            overflow-wrap: anywhere;
         }
 
         th {
             position: sticky;
             top: 0;
             z-index: 1;
-            background: #294161;
-            color: white;
-            white-space: nowrap;
+            background: #eaf0f7;
+            color: #294161;
+            font-size: 15px;
+            line-height: 1.5;
+            white-space: normal;
+        }
+
+        td {
+            overflow-wrap: anywhere;
+            min-width: 120px;
+            max-width: 300px;
         }
 
         tbody tr:nth-child(even) {
-            background: #f5f7fa;
+            background: #f7f9fc;
         }
 
         tbody tr:hover {
-            background: #e8eef6;
+            background: #edf5ff;
         }
 
-        .botao-excluir {
-            min-width: 100px;
-            background: #b42318;
-            color: white;
+        td button {
+            white-space: nowrap;
         }
 
-        .mensagem {
-            margin: 15px 0;
-            text-align: center;
+        #painel-respostas {
+            display: none;
         }
 
         @media (max-width: 600px) {
@@ -170,79 +162,129 @@
                 padding: 12px;
             }
 
-            .login-container {
-                margin: 30px auto;
-                padding: 22px;
+            .painel, header {
+                padding: 16px;
             }
 
-            .controles {
-                flex-direction: column;
+            header {
+                margin-bottom: 16px;
             }
 
-            .controles button {
-                width: 100%;
+            table {
+                min-width: 1450px;
+                font-size: 15px;
             }
+
+            th, td {
+                padding: 16px;
+            }
+
+            .painel button {
+                margin: 5px 0;
+            }
+        }
+        .botao-voltar {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .botao-voltar:hover {
+            background-color: #565e64;
         }
     </style>
 </head>
 
 <body>
+    <header>
+        <h1>DataVotoCesf</h1>
+        <p>Painel administrativo da pesquisa</p>
+    </header>
 
-    <section id="login" class="login-container">
-        <h1>Área administrativa</h1>
-        <p>Digite a senha para acessar as respostas.</p>
+    <section class="painel" id="painel-login">
+        <h2>Login do administrador</h2>
 
-        <form id="formLogin">
+        <form id="form-login">
+            <label for="senha">Senha administrativa</label>
+
             <input
+                id="senha"
                 type="password"
-                id="senhaAdmin"
-                placeholder="Senha de administrador"
+                autocomplete="current-password"
+                placeholder="Digite a senha"
                 required
             >
 
-            <button type="submit" class="botao-entrar">
-                Entrar
-            </button>
-
-            <a href="index.html" class="botao-voltar">
-                Voltar à página inicial
-            </a>
+            <button type="submit">Entrar</button>
+            <p id="mensagem-login" role="status"></p>
+            <button type="button" onclick="window.location.href='index.html'" class="botao-voltar">
+    Voltar à página inicial
+</button>
         </form>
-
-        <p id="mensagemLogin" class="mensagem"></p>
     </section>
 
-    <main id="painel">
-        <h1>Respostas do DataVotoCesf</h1>
+    <main class="painel" id="painel-respostas">
+        <h2>Respostas recebidas</h2>
 
-        <div class="controles">
-            <input
-                type="search"
-                id="pesquisa"
-                placeholder="Pesquisar nas respostas..."
-            >
+        <p id="total">Carregando respostas...</p>
 
-            <button id="atualizar" class="botao-atualizar" type="button">
-                Atualizar respostas
-            </button>
+        <input
+            type="search"
+            id="busca"
+            placeholder="Buscar uma resposta..."
+            aria-label="Buscar respostas"
+        >
 
-            <button id="excluirTodos" class="botao-excluir-todos" type="button">
-                Excluir todas
-            </button>
+        <button type="button" id="atualizar" class="sucesso">
+            Atualizar lista
+        </button>
 
-            <button id="sair" class="botao-sair" type="button">
-                Sair
-            </button>
-        </div>
+        <button type="button" id="excluir-todas" class="perigo">
+            Excluir todas as respostas
+        </button>
 
-        <p id="status" class="mensagem">Carregando respostas...</p>
+        <button type="button" id="sair">
+            Sair
+        </button>
+
+        <p id="mensagem" role="status"></p>
 
         <div class="tabela-container">
             <table>
                 <thead>
-                    <tr id="cabecalho"></tr>
+                    <tr>
+                        <th>Data</th>
+                        <th>Faixa etária</th>
+                        <th>Gênero</th>
+                        <th>Raça/cor</th>
+                        <th>Escolaridade</th>
+                        <th>Estado</th>
+                        <th>Bairro</th>
+                        <th>Moradia</th>
+                        <th>Moradores</th>
+                        <th>Renda familiar</th>
+                        <th>Prioridades</th>
+                        <th>Meios de informação</th>
+                        <th>Intenção de voto</th>
+                        <th>Resultado esperado</th>
+                        <th>Ação</th>
+                    </tr>
                 </thead>
-                <tbody id="corpoTabela"></tbody>
+
+                <tbody id="lista-respostas">
+                    <tr>
+                        <td colspan="15">
+                            Faça login para carregar as respostas.
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </main>
@@ -259,6 +301,10 @@
         } from
             "https://www.gstatic.com/firebasejs/13.0.0/firebase-database.js";
 
+        // Senha para demonstração escolar.
+        // Não é uma autenticação segura para dados reais.
+        const SENHA_ADMIN = "1322";
+
         const firebaseConfig = {
             apiKey: "AIzaSyDqXGQcAPyZ37Pnl7bFmbqzNfv3a6SjCXE",
             authDomain: "data-voto-cesf2.firebaseapp.com",
@@ -270,189 +316,255 @@
         };
 
         const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const respostasRef = ref(db, "respostas");
+        const database = getDatabase(app);
 
-        const login = document.getElementById("login");
-        const painel = document.getElementById("painel");
-        const formLogin = document.getElementById("formLogin");
-        const senhaAdmin = document.getElementById("senhaAdmin");
-        const mensagemLogin = document.getElementById("mensagemLogin");
-        const pesquisa = document.getElementById("pesquisa");
-        const cabecalho = document.getElementById("cabecalho");
-        const corpoTabela = document.getElementById("corpoTabela");
-        const status = document.getElementById("status");
+        const painelLogin = document.querySelector("#painel-login");
+        const painelRespostas = document.querySelector("#painel-respostas");
+        const formularioLogin = document.querySelector("#form-login");
+        const campoSenha = document.querySelector("#senha");
+        const mensagemLogin = document.querySelector("#mensagem-login");
+        const lista = document.querySelector("#lista-respostas");
+        const mensagem = document.querySelector("#mensagem");
+        const total = document.querySelector("#total");
+        const busca = document.querySelector("#busca");
 
-        let respostas = {};
-        let cancelarEscuta = null;
+        let respostas = [];
+        let pararEscuta = null;
+        let usuarioAutorizado = false;
 
-        // A senha abaixo é apenas uma barreira visual para demonstração.
-        // Ela não protege os dados do Firebase de forma segura.
-        formLogin.addEventListener("submit", (event) => {
-            event.preventDefault();
+        function mostrarMensagem(texto) {
+            mensagem.textContent = texto;
+        }
 
-            if (senhaAdmin.value === "1322") {
-                login.style.display = "none";
-                painel.style.display = "block";
-                mensagemLogin.textContent = "";
-                iniciarLeitura();
-            } else {
-                mensagemLogin.textContent = "Senha incorreta.";
-                senhaAdmin.value = "";
-            }
-        });
-
-        function iniciarLeitura() {
-            if (cancelarEscuta) {
-                cancelarEscuta();
+        function formatarValor(valor) {
+            if (valor === null || valor === undefined || valor === "") {
+                return "—";
             }
 
-            status.textContent = "Carregando respostas...";
+            if (Array.isArray(valor)) {
+                return valor.map(formatarValor).join(", ");
+            }
 
-            cancelarEscuta = onValue(
-                respostasRef,
+            if (typeof valor === "object") {
+                return JSON.stringify(valor);
+            }
+
+            return String(valor);
+        }
+
+        function formatarData(valor) {
+            if (typeof valor !== "number") {
+                return "—";
+            }
+
+            return new Date(valor).toLocaleString("pt-BR");
+        }
+
+        function adicionarCelula(linha, valor) {
+            const celula = document.createElement("td");
+            celula.textContent = valor;
+            linha.appendChild(celula);
+        }
+
+        function renderizarRespostas() {
+            if (!usuarioAutorizado) return;
+
+            const termo = busca.value.trim().toLowerCase();
+
+            const filtradas = respostas.filter(({ dados }) =>
+                JSON.stringify(dados).toLowerCase().includes(termo)
+            );
+
+            lista.replaceChildren();
+
+            total.textContent =
+                `${respostas.length} resposta(s) cadastrada(s).`;
+
+            if (filtradas.length === 0) {
+                const linha = document.createElement("tr");
+                const celula = document.createElement("td");
+
+                celula.colSpan = 15;
+                celula.textContent = "Nenhuma resposta encontrada.";
+
+                linha.appendChild(celula);
+                lista.appendChild(linha);
+                return;
+            }
+
+            filtradas.forEach(({ id, dados }) => {
+                const linha = document.createElement("tr");
+
+                adicionarCelula(linha, formatarData(dados.dataEnvio));
+                adicionarCelula(linha, formatarValor(dados.faixaEtaria));
+                adicionarCelula(linha, formatarValor(dados.genero));
+                adicionarCelula(linha, formatarValor(dados.racaCor));
+                adicionarCelula(linha, formatarValor(dados.escolaridade));
+                adicionarCelula(linha, formatarValor(dados.estado));
+                adicionarCelula(linha, formatarValor(dados.bairro));
+                adicionarCelula(linha, formatarValor(dados.moradia));
+                adicionarCelula(linha, formatarValor(dados.moradores));
+                adicionarCelula(linha, formatarValor(dados.rendaFamiliar));
+                adicionarCelula(linha, formatarValor(dados.prioridades));
+                adicionarCelula(linha, formatarValor(dados.meiosInformacao));
+                adicionarCelula(linha, formatarValor(dados.pretensaoVoto));
+                adicionarCelula(linha, formatarValor(dados.resultadoEsperado));
+
+                const celulaAcao = document.createElement("td");
+                const botao = document.createElement("button");
+
+                botao.type = "button";
+                botao.textContent = "Excluir";
+                botao.className = "perigo";
+
+                botao.addEventListener("click", () => {
+                    excluirResposta(id);
+                });
+
+                celulaAcao.appendChild(botao);
+                linha.appendChild(celulaAcao);
+                lista.appendChild(linha);
+            });
+        }
+
+        function iniciarEscuta() {
+            if (pararEscuta) {
+                pararEscuta();
+                pararEscuta = null;
+            }
+
+            mostrarMensagem("Carregando respostas...");
+
+            pararEscuta = onValue(
+                ref(database, "respostas"),
                 (snapshot) => {
-                    respostas = snapshot.val() || {};
-                    montarTabela();
+                    if (!usuarioAutorizado) return;
+
+                    const dados = snapshot.val() || {};
+
+                    respostas = Object.entries(dados).map(
+                        ([id, resposta]) => ({
+                            id,
+                            dados: resposta
+                        })
+                    ).reverse();
+
+                    renderizarRespostas();
+                    mostrarMensagem("");
                 },
                 (erro) => {
-                    status.textContent =
-                        "Erro ao carregar respostas: " + erro.message;
+                    console.error(erro);
+                    mostrarMensagem(
+                        "Não foi possível ler as respostas. Verifique as regras do Firebase."
+                    );
                 }
             );
         }
 
-        function montarTabela() {
-            cabecalho.replaceChildren();
-            corpoTabela.replaceChildren();
-
-            const registros = Object.entries(respostas);
-            const termo = pesquisa.value.trim().toLowerCase();
-
-            if (registros.length === 0) {
-                status.textContent = "Nenhuma resposta encontrada no Firebase.";
-                return;
-            }
-
-            const campos = new Set();
-
-            registros.forEach(([id, dados]) => {
-                if (dados && typeof dados === "object") {
-                    Object.keys(dados).forEach((campo) => campos.add(campo));
-                }
-            });
-
-            const colunas = ["ID", ...campos, "Ações"];
-
-            colunas.forEach((coluna) => {
-                const th = document.createElement("th");
-                th.textContent = coluna;
-                cabecalho.appendChild(th);
-            });
-
-            let exibidas = 0;
-
-            registros.forEach(([id, dados]) => {
-                const textoPesquisa =
-                    JSON.stringify(dados).toLowerCase() + " " + id.toLowerCase();
-
-                if (termo && !textoPesquisa.includes(termo)) {
-                    return;
-                }
-
-                const linha = document.createElement("tr");
-
-                const celulaId = document.createElement("td");
-                celulaId.textContent = id;
-                linha.appendChild(celulaId);
-
-                campos.forEach((campo) => {
-                    const celula = document.createElement("td");
-                    const valor = dados?.[campo];
-
-                    if (Array.isArray(valor)) {
-                        celula.textContent = valor.join(", ");
-                    } else if (valor && typeof valor === "object") {
-                        celula.textContent = JSON.stringify(valor);
-                    } else {
-                        celula.textContent = valor == null ? "" : String(valor);
-                    }
-
-                    linha.appendChild(celula);
-                });
-
-                const celulaAcao = document.createElement("td");
-                const botaoExcluir = document.createElement("button");
-
-                botaoExcluir.type = "button";
-                botaoExcluir.className = "botao-excluir";
-                botaoExcluir.textContent = "Excluir";
-
-                botaoExcluir.addEventListener("click", async () => {
-                    const confirmar = confirm(
-                        "Tem certeza de que deseja excluir esta resposta?"
-                    );
-
-                    if (!confirmar) return;
-
-                    try {
-                        await remove(ref(db, "respostas/" + id));
-                        status.textContent = "Resposta excluída.";
-                    } catch (erro) {
-                        alert("Não foi possível excluir: " + erro.message);
-                    }
-                });
-
-                celulaAcao.appendChild(botaoExcluir);
-                linha.appendChild(celulaAcao);
-                corpoTabela.appendChild(linha);
-                exibidas++;
-            });
-
-            status.textContent =
-                `${exibidas} resposta(s) exibida(s) de ${registros.length}.`;
-        }
-
-        pesquisa.addEventListener("input", montarTabela);
-
-        document.getElementById("atualizar").addEventListener("click", () => {
-            montarTabela();
-        });
-
-        document.getElementById("excluirTodos").addEventListener("click", async () => {
-            if (Object.keys(respostas).length === 0) {
-                alert("Não existem respostas para excluir.");
-                return;
-            }
+        async function excluirResposta(id) {
+            if (!usuarioAutorizado) return;
 
             const confirmar = confirm(
-                "Atenção: deseja realmente excluir TODAS as respostas?"
+                "Deseja realmente excluir esta resposta? Essa ação não pode ser desfeita."
             );
 
             if (!confirmar) return;
 
             try {
-                await remove(respostasRef);
-                status.textContent = "Todas as respostas foram excluídas.";
+                await remove(ref(database, `respostas/${id}`));
+                mostrarMensagem("Resposta excluída com sucesso.");
             } catch (erro) {
-                alert("Não foi possível excluir as respostas: " + erro.message);
+                console.error(erro);
+                mostrarMensagem(
+                    "Não foi possível excluir. Verifique as permissões do Firebase."
+                );
             }
-        });
+        }
 
-        document.getElementById("sair").addEventListener("click", () => {
-            if (cancelarEscuta) {
-                cancelarEscuta();
-                cancelarEscuta = null;
+        async function excluirTodas() {
+            if (!usuarioAutorizado) return;
+
+            if (respostas.length === 0) {
+                mostrarMensagem("Não existem respostas para excluir.");
+                return;
             }
 
-            painel.style.display = "none";
-            login.style.display = "block";
-            senhaAdmin.value = "";
-            pesquisa.value = "";
+            const confirmar = confirm(
+                `ATENÇÃO: você vai excluir TODAS as ${respostas.length} respostas. Deseja continuar?`
+            );
+
+            if (!confirmar) return;
+
+            const confirmarNovamente = confirm(
+                "Confirme novamente: deseja apagar todas as respostas da pesquisa?"
+            );
+
+            if (!confirmarNovamente) return;
+
+            try {
+                await remove(ref(database, "respostas"));
+                mostrarMensagem("Todas as respostas foram excluídas.");
+            } catch (erro) {
+                console.error(erro);
+                mostrarMensagem(
+                    "Não foi possível excluir. Verifique as permissões do Firebase."
+                );
+            }
+        }
+
+        formularioLogin.addEventListener("submit", (evento) => {
+            evento.preventDefault();
+
             mensagemLogin.textContent = "";
-        });
-    </script>
 
+            if (campoSenha.value !== SENHA_ADMIN) {
+                mensagemLogin.textContent = "Senha incorreta.";
+                campoSenha.value = "";
+                campoSenha.focus();
+                return;
+            }
+
+            usuarioAutorizado = true;
+            painelLogin.style.display = "none";
+            painelRespostas.style.display = "block";
+            mensagemLogin.textContent = "";
+
+            iniciarEscuta();
+        });
+
+        document.querySelector("#atualizar").addEventListener(
+            "click",
+            () => {
+                if (usuarioAutorizado) iniciarEscuta();
+            }
+        );
+
+        document.querySelector("#excluir-todas").addEventListener(
+            "click",
+            excluirTodas
+        );
+
+        document.querySelector("#sair").addEventListener("click", () => {
+            usuarioAutorizado = false;
+
+            if (pararEscuta) {
+                pararEscuta();
+                pararEscuta = null;
+            }
+
+            respostas = [];
+            lista.replaceChildren();
+            total.textContent = "Faça login para carregar as respostas.";
+
+            painelRespostas.style.display = "none";
+            painelLogin.style.display = "block";
+
+            campoSenha.value = "";
+            mensagemLogin.textContent = "";
+            mostrarMensagem("");
+        });
+
+        busca.addEventListener("input", renderizarRespostas);
+    </script>
 </body>
 </html>
-```
